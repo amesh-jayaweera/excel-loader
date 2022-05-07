@@ -11,21 +11,114 @@
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
+
+    <style>
+
+        .scroll {
+            overflow: scroll;
+        }
+
+        .fw-background {
+            position: absolute;
+            top: -685px;
+            left: 0;
+            width: 100%;
+            height: 902px;
+            background: #3a7fd5;
+            background: linear-gradient(to right, #3a7fd5, #6ebce2);
+            transform: skew(0, -1.5deg);
+            transform-origin: bottom left;
+            box-shadow: inset 0 -3px 10px rgb(0 0 0 / 10%);
+        }
+
+        .nav-ct {
+            text-align: left;
+            margin: 1em 0 -1em 0;
+            background-color: rgba(255,255,255,.9);
+            border-radius: 7px;
+            box-shadow: 0 3px 10px rgb(0 0 0 / 10%);
+        }
+
+        .fw-footer {
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            clear: both;
+            color: #ccc;
+            text-align: right;
+            padding: 2em 0;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            margin: 0;
+        }
+
+        .fw-footer .skew {
+            background: #363d46;
+            height: 70px;
+            transform: skew(0, -1.5deg);
+            transform-origin: top right;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            box-shadow: inset 0 3px 10px rgb(0 0 0 / 10%);
+        }
+
+        .fw-footer .skew-bg {
+            position: absolute;
+            top: 70px;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #363d46;
+        }
+
+        .fw-footer .copyright {
+            position: relative;
+            text-align: right;
+            padding: 1em 0;
+            max-width: 1140px;
+            margin: 0 auto;
+            line-height: 1.8em;
+            z-index: 1;
+        }   
+    </style>
 </head>
 <body>
     <div class="container">
-    	<h2 class="text-center mt-4 mb-4">Load Excel & Find Data Easy</h2>
-    	<div class="card">
-    		<div class="card-header"><b>Select Excel File</b></div>
-    		<div class="card-body">
-    			
-                <input type="file" id="excel_file" accept=".xlsx,.xls"/>
-
-    		</div>
-    	</div>
-        <div id="excel_data" class="mt-5"></div>
+        <div class="fw-background"></div>
+        <div>
+            <br/>
+            <br/>
+            <br/>
+            <div class="card">
+                <div class="card-header"><b>Load Excel & Search Data Easily</b></div>
+                <div class="card-body card-wrap">
+                    <input type="file" id="excel_file" accept=".xlsx,.xls"/>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <hr/>
+        <br/>
+        <div class="card">
+            <div class="card-header">
+            </div>
+            <div class="card-body scroll">
+                <div id="excel_data"></div>
+            </div>
+        </div>
     </div>
 
+    <footer>
+        <div class="fw-footer" style="position: absolute;">
+            <div class="copyright">
+                <h6>Load Excel & Search Data Easily</h6>
+                <p>Created by <a href="https://amesh-jayaweera.github.io/">Amesh Jayaweera</a><br/>
+            </div>
+        </div>
+    </footer>
 
     <script>
 
@@ -65,6 +158,9 @@
                     if(sheet_data.length < 1) {
                         alert("No enough data to display!");
                         return;
+                    } else {
+                        // $(".fw-footer").removeAttr("style");
+                        // $(".fw-footer").attr("style", "position: relative;");
                     }
 
                     const no_of_cols = sheet_data[1].length;
@@ -81,14 +177,14 @@
         
                             if(row == 0)
                             {
-                                _name = (cell + 1).toString() + "|" + ((sheet_data[row][cell] === undefined || sheet_data[row][cell] === null) ? '' : sheet_data[row][cell]);
+                                _name = (cell + 1).toString() + "|" + ((sheet_data[row][cell] === undefined || sheet_data[row][cell] === null) ? '' : sheet_data[row][cell].toString());
                                 table_output += '<th>'+ _name +'</th>';
                                 header += '<th>'+ _name +'</th>';
                                 columns.push({'data': _name});
                             }
                             else
                             {
-                                row_data[columns[cell].data] = (sheet_data[row][cell] === undefined || sheet_data[row][cell] === null) ? '' : sheet_data[row][cell];
+                                row_data[columns[cell].data] = (sheet_data[row][cell] === undefined || sheet_data[row][cell] === null) ? '' : sheet_data[row][cell].toString();
                             }
 
                             if(row == 0 && cell == no_of_cols - 1)
@@ -136,6 +232,16 @@
                         },
                         info: false
                     });
+
+                    // $('a.toggle-vis').on( 'click', function (e) {
+                    //     e.preventDefault();
+                
+                    //     // Get the column API object
+                    //     var column = table.column( $(this).attr('data-column') );
+                
+                    //     // Toggle the visibility
+                    //     column.visible( ! column.visible() );
+                    // });
                 }
         
                 excel_file.value = '';
